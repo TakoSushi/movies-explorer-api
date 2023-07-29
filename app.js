@@ -5,18 +5,14 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const cors = require('cors');
-// const rateLimit = require('express-rate-limit');
+const rateLimit = require('express-rate-limit');
+const { limiterConfig, serverPort, dbAddress } = require('./utils/constants');
 const { requestLogger } = require('./middlewares/logger');
 const routes = require('./routes');
 
-const { PORT = 8080, DB_URL = 'mongodb://127.0.0.1:27017/myfilmsdb' } = process.env;
+const { PORT = serverPort, DB_URL = dbAddress } = process.env;
 
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max: 100,
-//   standardHeaders: true,
-//   legacyHeaders: false,
-// });
+const limiter = rateLimit(limiterConfig);
 
 mongoose.connect(DB_URL)
   .then(() => console.log('connected DB'))
@@ -32,7 +28,7 @@ app.use(cors({
   optionSuccessStatus: 200,
 }));
 // app.use(cors({
-//   origin: 'https://kuzora-petr.nomoredomains.work',
+//   origin: 'https://kuzora-movies.nomoredomains.sbs',
 //   credentials: true,
 // }));
 
@@ -40,8 +36,7 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(bodyParser.json());
 
-app.use(routes);
-// app.use(limiter ,routes);
+app.use(limiter, routes);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

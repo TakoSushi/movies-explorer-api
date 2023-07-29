@@ -3,8 +3,8 @@ const { getAllMovies, createNewMovie, deleteMovieById } = require('../controller
 
 router.get('', getAllMovies);
 
-router.patch('', createNewMovie);
+router.post('', createNewMovie);
 
-router.delete(':movieId', deleteMovieById);
+router.delete('/:movieId', deleteMovieById);
 
 module.exports = router;
