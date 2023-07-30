@@ -6,8 +6,8 @@ const authRoutes = require('./auth');
 const auth = require('../middlewares/auth');
 const { errorLogger } = require('../middlewares/logger');
 const errorsHandler = require('../middlewares/errorshandler');
-
 const NotFoundError = require('../errors/not-found-err');
+const { incorrectPath } = require('../utils/constants');
 
 router.use('', authRoutes);
 
@@ -17,7 +17,7 @@ router.use('/users', userRoutes);
 router.use('/movies', movieRoutes);
 
 router.use('*', () => {
-  throw new NotFoundError('Указан неверный путь');
+  throw new NotFoundError(incorrectPath);
 });
 
 router.use(errorLogger);

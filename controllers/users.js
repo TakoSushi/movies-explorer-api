@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
+const { successAuth, successSignout, userNotFound } = require('../utils/constants');
 
 const createUser = (req, res, next) => {
   const newUser = req.body;
@@ -33,7 +34,7 @@ const signin = (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       })
-        .send({ message: 'Авторизация прошла успешно' })
+        .send({ message: successAuth })
         .end();
     })
     .catch(next);
@@ -43,12 +44,12 @@ const signout = (req, res) => {
   res
     .clearCookie('jwt')
     .status(200)
-    .send({ message: 'Выход успешно выполнен' });
+    .send({ message: successSignout });
 };
 
 const getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new NotFoundError('Пользователь не найден'))
+    .orFail(new NotFoundError(userNotFound))
     .then((user) => res.send(user))
     .catch(next);
 };
@@ -60,7 +61,7 @@ const changeUserInfo = (req, res, next) => {
     newUserInfo,
     { new: true, runValidators: true },
   )
-    .orFail(new NotFoundError('Пользователь не найден'))
+    .orFail(new NotFoundError(userNotFound))
     .then((user) => res.send(user))
     .catch(next);
 };
