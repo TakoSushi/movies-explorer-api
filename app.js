@@ -23,13 +23,15 @@ const app = express();
 app.use(requestLogger);
 
 app.use(cors({
-  origin: '*',
+  origin: 'https://kuzora-movies.nomoredomains.sbs',
   credentials: true,
-  optionSuccessStatus: 200,
 }));
 // app.use(cors({
-//   origin: 'https://kuzora-movies.nomoredomains.sbs',
+//   origin: 'http://localhost:3000',
 //   credentials: true,
+// origin: '*',
+// credentials: true,
+// optionSuccessStatus: 200,
 // }));
 
 app.use(cookieParser());
